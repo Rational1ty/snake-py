@@ -28,7 +28,7 @@ def gameover(win: g.GraphWin, score: int):
 
 
 def main():
-	window = g.GraphWin('Snake', 1000, 700, False)
+	window = g.GraphWin('Snake', WIDTH, HEIGHT, False)
 	window.setBackground(BG_COLOR)
 	window.master.geometry(f'{WIDTH}x{HEIGHT}+{WIN_X}+{WIN_Y}')
 
