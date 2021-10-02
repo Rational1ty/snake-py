@@ -1,7 +1,6 @@
 from collections import deque
 from enum import Enum
-from random import random, randrange
-from typing import Collection
+from random import choice, random, randrange
 
 import graphics as g
 
@@ -14,7 +13,7 @@ class Snake:
 	def __init__(self):
 		self.x = WIDTH // 2
 		self.y = HEIGHT // 2
-		self.direct = Direction.RIGHT
+		self.direct = choice(tuple(Direction))
 		self.body = deque()
 		self.size = INITIAL_SIZE
 

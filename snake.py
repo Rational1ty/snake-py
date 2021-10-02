@@ -1,4 +1,5 @@
 from time import sleep
+
 import graphics as g
 
 from constants import *
