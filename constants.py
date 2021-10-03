@@ -33,5 +33,5 @@ BODY_COLOR = color_rgb(25, 115, 200)
 # apple
 APPLE_VALUE = 3
 BIG_MULT = 10
-BIG_CHANCE = 0.05
+BIG_CHANCE = 0.1
 APPLE_COLOR = color_rgb(205, 55, 55)
