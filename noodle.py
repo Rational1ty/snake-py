@@ -11,8 +11,8 @@ Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
 
 class Snake:
 	def __init__(self):
-		self.x = WIDTH // 2
-		self.y = HEIGHT // 2
+		self.x = (WIDTH // 2) - ((WIDTH // 2) % SCALE)
+		self.y = (HEIGHT // 2) - ((HEIGHT // 2) % SCALE)
 		self.direct = choice(tuple(Direction))
 		self.body = deque()
 		self.size = INITIAL_SIZE
