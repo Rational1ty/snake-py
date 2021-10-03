@@ -78,11 +78,17 @@ def main():
 			gameover(window, snake.size)
 			break
 
-		# check if snake eats apple
-		d = SCALE if apple.big else 0
-		
-		if apple.x - d <= snake.x <= apple.x + d and apple.y - d <= snake.y <= apple.y:
-			snake.size += APPLE_VALUE * (BIG_MULT if apple.big else 1)
+		# check if snake eats big apple
+		if apple.big:
+			if (apple.x - SCALE <= snake.x <= apple.x + SCALE and
+				apple.y - SCALE <= snake.y <= apple.y + SCALE):
+				snake.size += APPLE_VALUE * BIG_MULT
+				apple.shape.undraw()
+				apple = Apple(window, snake.body)
+
+		# check if snake eats normal apple
+		if snake.x == apple.x and snake.y == apple.y:
+			snake.size += APPLE_VALUE
 			apple.shape.undraw()
 			apple = Apple(window, snake.body)
 
