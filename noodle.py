@@ -11,11 +11,14 @@ Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
 
 class Snake:
 	def __init__(self):
+		# snake starts at the center of the board
+		# the subtracted part is needed to keep the snake aligned with the grid
 		self.x = (WIDTH // 2) - ((WIDTH // 2) % SCALE)
 		self.y = (HEIGHT // 2) - ((HEIGHT // 2) % SCALE)
+
 		self.direct = choice(tuple(Direction))
-		self.body = deque()
 		self.size = INITIAL_SIZE
+		self.body = deque()
 
 	def setdirection(self, d: str):
 		if d == 'UP' or d == 'W':
@@ -77,8 +80,8 @@ class Snake:
 		return False
 
 	def _newbodypart(self) -> g.Rectangle:
-		p1 = g.Point(self.x, self.y)
-		p2 = g.Point(self.x + SCALE, self.y + SCALE)
+		p1 = g.Point(self.x + SNAKE_PADDING, self.y + SNAKE_PADDING)
+		p2 = g.Point(self.x + SCALE - SNAKE_PADDING, self.y + SCALE - SNAKE_PADDING)
 
 		rect = g.Rectangle(p1, p2)
 		rect.setFill(BODY_COLOR)
