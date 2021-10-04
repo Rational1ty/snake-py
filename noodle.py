@@ -5,6 +5,7 @@ from random import choice, random, randrange
 import graphics as g
 
 from constants import *
+from functions import square
 
 Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
 
@@ -13,8 +14,10 @@ class Snake:
 	def __init__(self):
 		# snake starts at the center of the board
 		# the subtracted part is needed to keep the snake aligned with the grid
-		self.x = (WIDTH // 2) - ((WIDTH // 2) % SCALE)
-		self.y = (HEIGHT // 2) - ((HEIGHT // 2) % SCALE)
+		w_half, h_half = WIDTH // 2, HEIGHT // 2
+
+		self.x = w_half - (w_half % SCALE)
+		self.y = h_half - (h_half % SCALE)
 
 		self.direct = choice(tuple(Direction))
 		self.size = INITIAL_SIZE
@@ -70,24 +73,29 @@ class Snake:
 			self.y = 0
 
 	def checkcollision(self) -> bool:
+		head = square(self.x, self.y, SCALE)
 		first = True
+
 		for part in self.body:
 			if first:
 				first = False
 				continue
-			if self.x == part.p1.x and self.y == part.p1.y:
+			if head.contains(part):
 				return True
+
 		return False
 
 	def _newbodypart(self) -> g.Rectangle:
-		p1 = g.Point(self.x + SNAKE_PADDING, self.y + SNAKE_PADDING)
-		p2 = g.Point(self.x + SCALE - SNAKE_PADDING, self.y + SCALE - SNAKE_PADDING)
+		part = square(
+			self.x + SNAKE_PADDING, 
+			self.y + SNAKE_PADDING, 
+			SCALE - (2 * SNAKE_PADDING)
+		)
 
-		rect = g.Rectangle(p1, p2)
-		rect.setFill(BODY_COLOR)
-		rect.setOutline(BODY_COLOR)
+		part.setFill(BODY_COLOR)
+		part.setOutline(BODY_COLOR)
 
-		return rect
+		return part
 
 
 class Apple:
@@ -95,36 +103,25 @@ class Apple:
 		self.big = random() < BIG_CHANCE
 
 		while True:
-			self.x = randrange(0, WIDTH, SCALE)
-			self.y = randrange(0, HEIGHT, SCALE)
+			bound = SCALE if self.big else 0
+			self.x = randrange(bound, WIDTH - bound, SCALE)
+			self.y = randrange(bound, HEIGHT - bound, SCALE)
+			self.shape = self._getshape()
 
 			if not self._checkcollision(exclude): break
 			
-		self.shape = self._draw(win)
+		self.shape.draw(win)
 
 	def _checkcollision(self, exclude) -> bool:
-		test = None
+		return any(map(self.shape.contains, exclude))
+
+	def _getshape(self) -> g.Rectangle:
+		shape = square(self.x, self.y, SCALE)
 
 		if self.big:
-			test = lambda r: \
-				self.x - SCALE <= r.p1.x <= self.x + SCALE and \
-				self.y - SCALE <= r.p1.y <= self.y + SCALE
-		else:
-			test = lambda r: self.x == r.p1.x and self.y == r.p1.y
+			shape.pad(SCALE)
+		
+		shape.setFill(APPLE_COLOR)
+		shape.setOutline(APPLE_COLOR)
 
-		return any(map(test, exclude))
-
-	def _draw(self, win: g.GraphWin) -> g.Rectangle:
-		p1 = g.Point(self.x, self.y)
-		p2 = g.Point(self.x + SCALE, self.y + SCALE)
-
-		if self.big:
-			p1.move(-SCALE, -SCALE)
-			p2.move(SCALE, SCALE)
-
-		rect = g.Rectangle(p1, p2)
-		rect.setFill(APPLE_COLOR)
-		rect.setOutline(APPLE_COLOR)
-		rect.draw(win)
-
-		return rect
+		return shape

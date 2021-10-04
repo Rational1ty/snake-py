@@ -1,5 +1,6 @@
 from collections import deque
 from time import sleep
+
 import graphics as g
 
 from constants import *
@@ -9,26 +10,20 @@ from noodle import Apple, Snake
 def frame():
 	global window, keys, snake, apple
 
+	# if a key has been pressed
 	if len(keys) > 0:
 		snake.setdirection(keys.popleft())
 
 	snake.move(window)
 
+	# check if snake collides with itself
 	if snake.checkcollision():
 		gameover()
 		raise StopIteration()
 
-	# check if snake eats big apple
-	if apple.big:
-		if (apple.x - SCALE <= snake.x <= apple.x + SCALE and
-			apple.y - SCALE <= snake.y <= apple.y + SCALE):
-			snake.size += APPLE_VALUE * BIG_MULT
-			apple.shape.undraw()
-			apple = Apple(window, snake.body)
-
-	# check if snake eats normal apple
-	if snake.x == apple.x and snake.y == apple.y:
-		snake.size += APPLE_VALUE
+	# check if snake eats apple
+	if apple.shape.contains(snake.body[0]):
+		snake.size += APPLE_VALUE * (BIG_MULT if apple.big else 1)
 		apple.shape.undraw()
 		apple = Apple(window, snake.body)
 
