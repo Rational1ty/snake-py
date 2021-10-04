@@ -21,7 +21,6 @@ FRAME_RATE = 10
 REFRESH_RATE = 30
 REFRESH_PER_FRAME = REFRESH_RATE // FRAME_RATE
 
-
 # color
 BG_COLOR = color_rgb(30, 30, 30)
 FG_COLOR = color_rgb(220, 220, 220)
@@ -33,7 +32,7 @@ BODY_COLOR = color_rgb(25, 115, 200)
 SNAKE_PADDING = 0
 
 assert SNAKE_PADDING * 2 < SCALE, \
-	f'SNAKE_PADDING too large ({SNAKE_PADDING} >= {SCALE / 2})'
+	f'SNAKE_PADDING too large ({SNAKE_PADDING} >= {SCALE // 2})'
 
 # apple
 APPLE_VALUE = 3

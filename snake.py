@@ -19,7 +19,6 @@ def frame():
 	# check if snake collides with itself
 	if snake.checkcollision():
 		gameover()
-		raise StopIteration()
 
 	# check if snake eats apple
 	if apple.shape.contains(snake.body[0]):
@@ -43,6 +42,10 @@ def gameover():
 	# display gameover then exit
 	display_score()
 
+	window.getKey()
+	window.close()
+	exit(0)
+
 
 def display_score():
 	global window, snake
@@ -64,7 +67,24 @@ def display_score():
 
 	g.update()
 
-	window.getKey()
+
+def check_keypressed():
+	global window, keys
+
+	key = window.checkKey().upper()
+
+	# check for key press
+	if key:
+		# end the game
+		if key == 'ESCAPE':
+			gameover()
+
+		# pause the game
+		if key == 'SPACE':
+			while window.getKey() != 'space':
+				pass
+
+		keys.append(key)
 
 
 def main():
@@ -81,21 +101,7 @@ def main():
 	count = 1
 
 	while True:
-		key = window.checkKey().upper()
-
-		# check for key press
-		if key:
-			# end the game
-			if key == 'ESCAPE':
-				gameover()
-				break
-
-			# pause the game
-			if key == 'SPACE':
-				while window.getKey() != 'space':
-					pass
-
-			keys.append(key)
+		check_keypressed()
 
 		# graphics updates; runs at FRAME_RATE
 		if count % REFRESH_PER_FRAME == 0:
