@@ -119,7 +119,7 @@ class Apple:
 		shape = square(self.x, self.y, SCALE)
 
 		if self.big:
-			shape.pad(SCALE)
+			shape.pad(BIG_PAD)
 		
 		shape.setFill(APPLE_COLOR)
 		shape.setOutline(APPLE_COLOR)
