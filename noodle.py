@@ -1,6 +1,6 @@
 from collections import deque
 from enum import Enum
-from random import choice, random, randrange
+import random
 
 import graphics as g
 
@@ -12,14 +12,14 @@ Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
 
 class Snake:
 	def __init__(self):
-		# snake starts at the center of the board
-		# the subtracted part is needed to keep the snake aligned with the grid
 		w_half, h_half = WIDTH // 2, HEIGHT // 2
 
+		# snake starts at the center of the board
+		# the subtracted part is needed to keep the snake aligned with the grid
 		self.x = w_half - (w_half % SCALE)
 		self.y = h_half - (h_half % SCALE)
 
-		self.direct = choice(tuple(Direction))
+		self.direct = random.choice(tuple(Direction))
 		self.size = INITIAL_SIZE
 		self.body = deque()
 
@@ -100,12 +100,12 @@ class Snake:
 
 class Apple:
 	def __init__(self, win: g.GraphWin, exclude):
-		self.big = random() < BIG_CHANCE
+		self.big = random.random() < BIG_CHANCE
 
 		while True:
 			bound = SCALE if self.big else 0
-			self.x = randrange(bound, WIDTH - bound, SCALE)
-			self.y = randrange(bound, HEIGHT - bound, SCALE)
+			self.x = random.randrange(bound, WIDTH - bound, SCALE)
+			self.y = random.randrange(bound, HEIGHT - bound, SCALE)
 			self.shape = self._getshape()
 
 			if not self._checkcollision(exclude): break

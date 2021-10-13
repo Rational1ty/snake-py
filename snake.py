@@ -7,7 +7,7 @@ from constants import *
 from noodle import Apple, Snake
 
 
-def frame():
+def draw_frame():
 	global window, keys, snake, apple
 
 	# if a key has been pressed
@@ -68,23 +68,21 @@ def display_score():
 	g.update()
 
 
-def check_keypressed():
+def onkeypress(key: str):
 	global window, keys
 
-	key = window.checkKey().upper()
+	key = key.upper()
 
-	# check for key press
-	if key:
-		# end the game
-		if key == 'ESCAPE':
-			gameover()
+	# end the game
+	if key == 'ESCAPE':
+		gameover()
 
-		# pause the game
-		if key == 'SPACE':
-			while window.getKey() != 'space':
-				pass
+	# pause the game
+	if key == 'SPACE':
+		while window.getKey() != 'space':
+			pass
 
-		keys.append(key)
+	keys.append(key)
 
 
 def main():
@@ -101,13 +99,14 @@ def main():
 	count = 1
 
 	while True:
-		check_keypressed()
+		if key := window.checkKey():
+			onkeypress(key)
 
 		# graphics updates; runs at FRAME_RATE
 		if count % REFRESH_PER_FRAME == 0:
 			count = 0
 			try:
-				frame()
+				draw_frame()
 			except StopIteration:
 				break
 
