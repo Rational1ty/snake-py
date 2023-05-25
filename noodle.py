@@ -2,10 +2,10 @@ from collections import deque
 from enum import Enum
 import random
 
-import graphics as g
+from graphics import GraphWin, Rectangle
 
 from constants import *
-from functions import square
+from functions import make_square
 
 Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
 
@@ -24,28 +24,30 @@ class Snake:
 		self.body = deque()
 
 	def setdirection(self, d: str):
-		if d == 'UP' or d == 'W':
-			if self.direct != Direction.DOWN:
-				self.direct = Direction.UP
-		if d == 'DOWN' or d == 'S':
-			if self.direct != Direction.UP:
-				self.direct = Direction.DOWN
-		if d == 'LEFT' or d == 'A':
-			if self.direct != Direction.RIGHT:
-				self.direct = Direction.LEFT
-		if d == 'RIGHT' or d == 'D':
-			if self.direct != Direction.LEFT:
-				self.direct = Direction.RIGHT
+		match d:
+			case 'UP' | 'W':
+				if self.direct != Direction.DOWN:
+					self.direct = Direction.UP
+			case 'DOWN' | 'S':
+				if self.direct != Direction.UP:
+					self.direct = Direction.DOWN
+			case 'LEFT' | 'A':
+				if self.direct != Direction.RIGHT:
+					self.direct = Direction.LEFT
+			case 'RIGHT' | 'D':
+				if self.direct != Direction.LEFT:
+					self.direct = Direction.RIGHT
 
-	def move(self, win: g.GraphWin):
-		if self.direct == Direction.UP:
-			self.y -= SCALE
-		if self.direct == Direction.DOWN:
-			self.y += SCALE
-		if self.direct == Direction.LEFT:
-			self.x -= SCALE
-		if self.direct == Direction.RIGHT:
-			self.x += SCALE
+	def move(self, win: GraphWin):
+		match self.direct:
+			case Direction.UP:
+				self.y -= SCALE
+			case Direction.DOWN:
+				self.y += SCALE
+			case Direction.LEFT:
+				self.x -= SCALE
+			case Direction.RIGHT:
+				self.x += SCALE
 
 		self._wrap()
 
@@ -57,11 +59,8 @@ class Snake:
 		head = self._newbodypart()
 		self.body.appendleft(head)
 
-		try:
-			head.draw(win)
-		except g.GraphicsError:
-			pass
-
+		head.draw(win)
+		
 	def _wrap(self):
 		if self.x < 0:
 			self.x = WIDTH - abs(self.x)
@@ -73,7 +72,7 @@ class Snake:
 			self.y = 0
 
 	def checkcollision(self) -> bool:
-		head = square(self.x, self.y, SCALE)
+		head = make_square(self.x, self.y, SCALE)
 		first = True
 
 		for part in self.body:
@@ -85,8 +84,8 @@ class Snake:
 
 		return False
 
-	def _newbodypart(self) -> g.Rectangle:
-		part = square(
+	def _newbodypart(self) -> Rectangle:
+		part = make_square(
 			self.x + SNAKE_PADDING, 
 			self.y + SNAKE_PADDING, 
 			SCALE - (2 * SNAKE_PADDING)
@@ -99,7 +98,7 @@ class Snake:
 
 
 class Apple:
-	def __init__(self, win: g.GraphWin, exclude):
+	def __init__(self, win: GraphWin, exclude):
 		self.big = random.random() < BIG_CHANCE
 
 		while True:
@@ -115,8 +114,8 @@ class Apple:
 	def _checkcollision(self, exclude) -> bool:
 		return any(map(self.shape.contains, exclude))
 
-	def _getshape(self) -> g.Rectangle:
-		shape = square(self.x, self.y, SCALE)
+	def _getshape(self) -> Rectangle:
+		shape = make_square(self.x, self.y, SCALE)
 
 		if self.big:
 			shape.pad(BIG_PAD)

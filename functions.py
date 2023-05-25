@@ -1,7 +1,7 @@
 import graphics as g
 
 
-def square(x: int, y: int, side_len: int) -> g.Rectangle:
+def make_square(x: int, y: int, side_len: int) -> g.Rectangle:
 	p1 = g.Point(x, y)
 	p2 = g.Point(x + side_len, y + side_len)
 	return g.Rectangle(p1, p2)

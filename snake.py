@@ -1,7 +1,8 @@
 from collections import deque
 from time import sleep
 
-import graphics as g
+import graphics
+from graphics import GraphWin, Point, Rectangle, Text
 
 from constants import *
 from noodle import Apple, Snake
@@ -31,7 +32,7 @@ def gameover():
 	global window, snake, apple
 
 	# display last movement
-	g.update()
+	graphics.update()
 	sleep(0.5)
 
 	# undraw everything
@@ -50,22 +51,22 @@ def gameover():
 def display_score():
 	global window, snake
 
-	center = g.Point(WIDTH // 2, HEIGHT // 2)
+	center = Point(WIDTH // 2, HEIGHT // 2)
 
 	# game over text
-	text = g.Text(center, f'Game over!\nScore: {snake.size}')
+	text = Text(center, f'Game over!\nScore: {snake.size}')
 	text.setSize(36)
 	text.setTextColor(FG_COLOR)
 	text.draw(window)
 
 	# text outline
-	p1 = g.Point(center.x - 200, center.y - 70)
-	p2 = g.Point(center.x + 200, center.y + 70)
-	rect = g.Rectangle(p1, p2)
+	p1 = Point(center.x - 200, center.y - 70)
+	p2 = Point(center.x + 200, center.y + 70)
+	rect = Rectangle(p1, p2)
 	rect.setOutline(FG_COLOR)
 	rect.draw(window)
 
-	g.update()
+	graphics.update()
 
 
 def onkeypress(key: str):
@@ -88,7 +89,7 @@ def onkeypress(key: str):
 def main():
 	global window, keys, snake, apple
 
-	window = g.GraphWin('Snake', WIDTH, HEIGHT, False)
+	window = GraphWin('Snake', WIDTH, HEIGHT, False)
 	window.setBackground(BG_COLOR)
 	window.master.geometry(f'{WIDTH}x{HEIGHT}+{WIN_X}+{WIN_Y}')
 
@@ -111,7 +112,7 @@ def main():
 				break
 
 		count += 1
-		g.update(REFRESH_RATE)
+		graphics.update(REFRESH_RATE)
 
 
 if __name__ == '__main__':
